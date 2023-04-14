@@ -1,3 +1,4 @@
+import { getSinglePost } from "@/utilities/getSinglePost";
 import Image from "next/image";
 
 export default async function BlogPostSingle({
@@ -5,64 +6,7 @@ export default async function BlogPostSingle({
 }: {
   params: { slug: string };
 }) {
-  const post = (
-    await fetch(`${process.env.GRAPHQL_ENDPOINT}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        query: `
-            query GetPostBySlug($slug: ID!) {
-                post(id: $slug, idType:SLUG) {
-                  title
-                  slug
-                  date
-                  content
-                  featuredImage {
-                    node {
-                      altText
-                      sourceUrl
-                      mediaDetails {
-                        width
-                        height
-                        sizes(include: [MEDIUM_LARGE, MEDIUM]) {
-                          height
-                          width
-                          sourceUrl
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-                      `,
-        variables: {
-          slug: params.slug,
-        },
-      }),
-    }).then((res) => res.json())
-  ).data.post as {
-    title: string;
-    slug: string;
-    content: string;
-    date: string;
-    featuredImage: {
-      node: {
-        sourceUrl: string;
-        altText: string;
-        mediaDetails: {
-          width: number;
-          height: number;
-          sizes: Array<{
-            height: number;
-            width: number;
-            sourceUrl: string;
-          }> | null;
-        };
-      };
-    };
-  };
+  const post = await getSinglePost(params.slug);
 
   const featuredImage =
     post.featuredImage?.node &&

@@ -1,28 +1,8 @@
+import { getDatesOfRecentPosts } from "@/utilities/getDatesOfRecentPosts";
 import Link from "next/link";
 
 export async function MonthlyArchive() {
-  const posts = (
-    await fetch(`${process.env.GRAPHQL_ENDPOINT}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        query: `
-            query GetMonthsArchive($numOfPosts: Int!) {
-                posts(first: $numOfPosts) {
-                  nodes {
-                    date
-                  }
-                }
-              }
-              `,
-        variables: {
-          numOfPosts: 100,
-        },
-      }),
-    }).then((res) => res.json())
-  ).data.posts.nodes as Array<{ date: string }>;
+  const posts = await getDatesOfRecentPosts();
 
   const groupedPosts = posts.reduce((groups, post) => {
     const [year, month] = post.date.split("-");
