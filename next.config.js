@@ -3,6 +3,9 @@ const nextConfig = {
   experimental: {
     appDir: true,
   },
-}
+  images: {
+    domains: ["randomcontent.wpengine.com"],
+  },
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;
