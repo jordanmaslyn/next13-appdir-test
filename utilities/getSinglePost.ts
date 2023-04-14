@@ -4,6 +4,10 @@ export const getSinglePost = cache(async (slug: string) => {
   return (
     await fetch(`${process.env.GRAPHQL_ENDPOINT}`, {
       method: "POST",
+      cache: "force-cache",
+      next: {
+        revalidate: 60,
+      },
       headers: {
         "Content-Type": "application/json",
       },
